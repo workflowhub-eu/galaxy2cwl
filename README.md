@@ -1,7 +1,8 @@
-# I use cwl-interface and cwl-abstract intercheangably here.
-# The idea is from https://github.com/common-workflow-language/common-workflow-language/issues/337
+I use cwl-interface and cwl-abstract intercheangably here.
+The idea is from https://github.com/common-workflow-language/common-workflow-language/issues/337
 
-This is a standalone that communicates with Galaxy and retrieves info from workflows definitions or worflows executions and transforms it into CWL abstract format (something like a cwl interface )
+# This is a standalone tool that communicates with Galaxy and retrieves info from workflows definitions or worflows executions and transforms it into CWL abstract format (something like a cwl interface )
+
 
 - The main use case initially would be to create ro-crate objects for 2 cases:
     - for workflow executions: I would have the cwl-interface representing the CW:-PROV data. and also the galaxy workflow definition file? or any other info from galaxy?
