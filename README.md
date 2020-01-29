@@ -5,7 +5,11 @@
 
 
 ## Examples
-A simple workflow in Galaxy format can be found in examples/simple_workflow_galaxy.ga
+A simple workflow to use as example can be found in https://usegalaxy.eu/u/igegu/w/simple-workflow 
+This workflow is available in different formats in the examples/ directory:
+The Galaxy .ga format is in examples/simple_workflow_galaxy.ga
+The format2 version yaml wrapped in json can be found in examples/simple_workflow_format2_yaml_wrapped.json
+The format2 pure yaml in examples/simple_workflow_format2.yaml
 To convert this to a CWL-interface 
 The resulting CWL-interface can be found in examples/simple_workflow_cwl-interface.cwl
 
