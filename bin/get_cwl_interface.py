@@ -51,8 +51,33 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
         run_dict['id']=step['tool_id']
         run_dict['doc']="Execute "+ step_name
         step_details['run']=run_dict
+        # add step inputs
+        step_inputs={}
+        for step_in in step['in']:
+            step_inputs[step_in]=step['in'][step_in]['source']
+        step_details['in']=step_inputs
 
+        # input_desc={}
+        # input_desc['type']='File -- I have no info about file type'
+        # input_desc['doc']='Connected inputs have no description in the .ga file'
+        # step_inputs[name]=input_desc
+        # for input_entry in v['inputs']:
+            # input_desc={}
+            # input_desc['type']='File'
+            # input_desc['doc']=input_entry['description']
+            # step_inputs[input_entry['name']]=input_desc
 
+        # step outputs
+        step_outputs_list=[]
+        step_outputs={} # detailed dictionary of each output
+        #############*************CHECK IF THE out KEY IS PRESENT
+        for step_out in step['out']:
+            step_out_details={}
+            step_out_details['type']='File'
+            step_out_details['doc']='Need to complete from tool info'
+            #step_out_details['outputSource']=         Not sure this makes sense to include
+            step_outputs[step_out]=step_out_details
+            step_outputs_list.append(step_out)
 
         ## add the step to the list
         steps[step_name]=step_details
