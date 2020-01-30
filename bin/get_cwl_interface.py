@@ -1,7 +1,7 @@
 import yaml
 #import json
 import sys
-
+# import pprint
 
 
 # load the workflow in a dict
@@ -25,6 +25,9 @@ if wf_class != "GalaxyWorkflow" and "yaml_content" not in wf_dict:  # format2 op
 # check again that the format is correct 
 wf_class=wf_dict.get("class", None)
 if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for format2
+    if "yaml_content" in wf_dict:
+        # need to first extract 
+        wf_dict=yaml.safe_load(wf_dict['yaml_content'])
     cwl_label='Abstract CWL workflow automatically generated from a Galaxy format2 workflow file'
     #print(wf_dict)
     for output in wf_dict['outputs']:
