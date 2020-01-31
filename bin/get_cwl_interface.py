@@ -27,10 +27,11 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
     if "yaml_content" in wf_dict:
         # need to first extract 
         wf_dict=yaml.safe_load(wf_dict['yaml_content'])
-    cwl_label='Abstract CWL workflow automatically generated from a Galaxy format2 workflow file'
+    wf_label=wf_dict['label']
+    cwl_doc= 'Abstract CWL generated from Galaxy: ' + wf_label
     for output in wf_dict['outputs']:
         output_details={}
-        output_details['type']='File ... need to retrieve more info'
+        output_details['type']='File'
         output_details['outputSource']=wf_dict['outputs'][output]['outputSource']
         wf_outputs[output]=output_details
     for input_entry in wf_dict['inputs']:
@@ -47,7 +48,12 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
         # add step inputs
         step_inputs={}
         for step_in in step['in']:
-            step_inputs[step_in]=step['in'][step_in]['source']
+            step_in_details={}
+            step_in_details['source']=step['in'][step_in]['source']
+            step_in_details['type']='File'   ## Operation inputs and outputs MUST have a type
+            step_in_details['format']='Need to complete from tool info'   ## Operation inputs and outputs SHOULD have a format and doc
+            step_in_details['doc']='Need to complete from tool info'   ## Operation inputs and outputs SHOULD have a format and doc
+            step_inputs[step_in]=step_in_details
         step_details['inputs']=step_inputs
 
         # step outputs
@@ -56,8 +62,9 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
         if 'out' in step:
             for step_out in step['out']:
                 step_out_details={}
-                step_out_details['type']='File'
-                step_out_details['doc']='Need to complete from tool info'
+                step_out_details['type']='File' ## Operation inputs and outputs MUST have a type
+                step_out_details['doc']='Need to complete from tool info'  ## Operation inputs and outputs SHOULD have a format and doc
+                step_out_details['format']='Need to complete from tool info' ## Operation inputs and outputs SHOULD have a format and doc
                 #step_out_details['outputSource']=         Not sure this makes sense to include
                 step_outputs[step_out]=step_out_details
                 step_outputs_list.append(step_out)
@@ -72,9 +79,9 @@ else:
 
 
 cwl_out['steps']=steps
-cwl_out['cwlVersion']='v1.0'
+cwl_out['cwlVersion']='v1.2.0-dev2'
 cwl_out['class']='Workflow'
-cwl_out['label']=cwl_label
+cwl_out['doc']=cwl_doc
 cwl_out['inputs']=wf_inputs
 cwl_out['outputs']=wf_outputs
 print(yaml.dump(cwl_out))
