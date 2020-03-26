@@ -2,31 +2,111 @@ import yaml
 #import json
 import sys
 # import pprint
+import json
 
 
-# load the workflow in a dict
-wf_dict=yaml.safe_load(open(sys.argv[1]))
-## TODO CHECK IF THE INPUT IS INDEED A WORKFLOW
+def try_as(loader, s, on_error):
+    try:
+        loader(s)
+        return True
+    except on_error:
+        return False
+
+def is_json(s):
+    return try_as(json.loads, s, ValueError)
+
+def is_yaml(s):
+    return try_as(yaml.safe_load, s, yaml.scanner.ScannerError)
 
 
-wf_inputs={}
-wf_outputs={}
-steps={}
-cwl_out={}
 
-wf_class=wf_dict.get("class", None)
+def process_format1_json(wf_dict):
+    wf_inputs={}
+    wf_outputs={}
+    steps={}
+    wf_name = wf_dict['name']
+    cwl_doc= 'Abstract CWL generated from Galaxy: ' + wf_name
+    cwl_out={}
+    map_output_to_in_name= {}  # map formal names to labelled/renamed
+    step_index_map = {}  # map step index num with full step names 
+    #iterate over input steps
+    for step_index, step_details in wf_dict['steps'].items():
+        if step_details['type'] == 'data_input':
+            #user data input
+            input_details = {}
+            input_details['format'] = 'data'
+            input_details['type'] = 'File'
+            # ok to assume there is only 1 input per data_input step ?
+            input_name = step_details['inputs'][0]['name']
+            if step_details['inputs'][0]['description'] != '':
+                input_details['doc']= step_details['inputs'][0]['description']
+            # why some input_data steps don't have workflow_outputs lists defined ?
+            if len(step_details['workflow_outputs']) > 0:
+                output_name = step_details['workflow_outputs'][0]['output_name']
+            else:
+                output_name = 'output'
+            map_output_to_in_name[step_index + '_' + output_name] = input_name
+            wf_inputs[input_name] = input_details
+        else:
+            step_name = step_details['name']
+            step_index_map[str(step_index)] = step_index + '_' + step_name
+    # iterate over tool steps
+    for step_index, step_details in wf_dict['steps'].items():
+        if step_details['type'] != 'data_input':
+            step_cwl_entry = {}
+            step_run_dict = {}
+            step_run_dict['class'] = 'Operation'
+            step_run_dict['id'] = step_details['tool_id']
+            step_class_outputs = {}   #dict inside the run object
+            step_class_inputs = {} # dict inside the run  object
+            step_wf_out = []  # list associated to out key
+            step_wf_in = {}
+            step_name = step_index + '_' + step_details['name']
+            for input_name,input_details in step_details['input_connections'].items():
+                source_output_name = input_details['output_name']
+                source_output_name_canon = str(input_details['id']) + '_' + source_output_name
+                source_index = input_details['id']
+                # get the source step id
+                if str(source_index) not in step_index_map.keys():  # does not belong to a previous tool but to a users input
+                    step_wf_in[input_name] = map_output_to_in_name[source_output_name_canon]
+                else: # input connected to other tool output
+                    # get the source output name ()
+                    # out_name_canon = step_index + '_' + source_output_name
+                    source_step_name = step_index_map[str(source_index)]
+                    step_wf_in[input_name] = source_step_name + '/' + source_output_name
+                step_class_inputs[input_name] = {'format':'Any', 'type':'File'}  #TODO: can add more metadata on this? replicate the info from the source step?
+
+            # step_cwl_entry['run'] = step_run
+            step_run_dict['inputs'] = step_class_inputs
+            step_cwl_entry['in'] = step_wf_in
+            steps[step_name] = step_cwl_entry
+
+            #iterate over outputs
+            for output in step_details['outputs']:
+                step_wf_out.append(output['name'])
+                step_class_outputs[output['name']] = {'type': 'File' , 'doc': output['type']}   ## ideally I should map Galaxy types to CWLType 
+            step_run_dict['outputs'] = step_class_outputs
+            step_cwl_entry['run'] = step_run_dict
+            step_cwl_entry['out'] = step_wf_out
+    cwl_out['steps']=steps
+    cwl_out['cwlVersion']='v1.2.0-dev1'
+    cwl_out['class']='Workflow'
+    cwl_out['doc']=cwl_doc
+    cwl_out['inputs']=wf_inputs
+    cwl_out['outputs']=wf_outputs
+    return cwl_out
+
+## NOT USED: converting format1 to format2 is not totally reliable.
+# if wf_class != "GalaxyWorkflow" and "yaml_content" not in wf_dict:  # format2 options
+    # import gxformat2
+    # wf_dict=gxformat2.from_galaxy_native(wf_dict)
 
 
-if wf_class != "GalaxyWorkflow" and "yaml_content" not in wf_dict:  # format2 options
-    import gxformat2
-    wf_dict=gxformat2.from_galaxy_native(wf_dict)
 
-# check again that the format is correct 
-wf_class=wf_dict.get("class", None)
-if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for format2
-    if "yaml_content" in wf_dict:
-        # need to first extract 
-        wf_dict=yaml.safe_load(wf_dict['yaml_content'])
+def process_format2_yaml(wf_dict):
+    wf_inputs={}
+    wf_outputs={}
+    steps={}
     wf_label=wf_dict['label']
     cwl_doc= 'Abstract CWL generated from Galaxy: ' + wf_label
     global_outputs = {}
@@ -155,17 +235,32 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
             full_source_name = full_source_names_dict[step_num]
             output_details['outputSource']=full_source_name + '/' + out_name
             wf_outputs[output]=output_details
+    cwl_out={}
+    cwl_out['steps']=steps
+    cwl_out['cwlVersion']='v1.2.0-dev1'
+    cwl_out['class']='Workflow'
+    cwl_out['doc']=cwl_doc
+    cwl_out['inputs']=wf_inputs
+    cwl_out['outputs']=wf_outputs
+    return cwl_out
 
-
-else:
-    print("Format does not belong to any Galaxy workflow formats")
-    sys.exit()
-
-
-cwl_out['steps']=steps
-cwl_out['cwlVersion']='v1.2.0-dev1'
-cwl_out['class']='Workflow'
-cwl_out['doc']=cwl_doc
-cwl_out['inputs']=wf_inputs
-cwl_out['outputs']=wf_outputs
-print(yaml.dump(cwl_out))
+if __name__ == '__main__':
+    if is_json(open(sys.argv[1]).read()):
+        wf_dict = json.loads(open(sys.argv[1]).read())
+        if "yaml_content" in wf_dict:
+            # need to first extract 
+            wf_dict = yaml.safe_load(wf_dict['yaml_content'])
+            cwl_out = process_format2_yaml(wf_dict)
+        else:
+            if wf_dict['a_galaxy_workflow'] == 'true':
+                cwl_out = process_format1_json(wf_dict)
+    else:
+        if is_yaml(open(sys.argv[1])):
+            wf_dict = yaml.safe_load(open(sys.argv[1]))
+            wf_class = wf_dict.get("class", None)
+            if wf_class == "GalaxyWorkflow":
+                cwl_out = process_format2_yaml(wf_dict)
+            else:
+                print('Error processing file: Incorrect format')
+                sys.exit()
+    print(yaml.dump(cwl_out))
