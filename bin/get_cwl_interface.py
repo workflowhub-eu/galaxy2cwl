@@ -43,6 +43,11 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
             output_details['type']='File'
             output_details['outputSource']=wf_dict['outputs'][output]['outputSource']
             step_num,out_name= wf_dict['outputs'][output]['outputSource'].split('/')
+            ## TODO refactor this step to check what kind of source step it is
+            if step_num.isdigit():   # the source references a step index
+                step_num = str(step_num)
+            else:
+                step_num = step_num.replace(':', ' -')
             if step_num in global_outputs.keys():
                 global_outputs[step_num].append(out_name)
             else:
@@ -50,26 +55,53 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
             wf_outputs[output]=output_details
         else:
             input_steps_count += 1
+    # first iteration over the steps, just to get the step_name right and fill in full_source_nameS_dict
+    for (step_index,step) in enumerate(wf_dict['steps']):
+        corrected_step_index = str(step_index + input_steps_count)
+        if 'label' not in step.keys():
+            step_name = corrected_step_index + '_' + step['tool_id'].replace('/', '_')  #step['tool_shed_repository']['name']
+        else:
+            step_name = step['label'].replace(':',' -')
+            full_source_names_dict[step_name] = step_name
+        full_source_names_dict[corrected_step_index] = step_name
+    # now iterate again and process each step inputs/outputs/... 
     for (step_index,step) in enumerate(wf_dict['steps']):
         step_details = {}
+        step_public_out_list = []
         corrected_step_index = str(step_index + input_steps_count)
-        step_name = corrected_step_index + '_' + step['tool_id']  #step['tool_shed_repository']['name']
-        full_source_names_dict[corrected_step_index] = step_name
+        if 'label' not in step.keys():
+            step_name = corrected_step_index + '_' + step['tool_id'].replace('/', '_')  #step['tool_shed_repository']['name']
+        else:
+            step_name = step['label'].replace(':', ' -')
         # this should be stored in a gobal dict of tools runs. if a workflow calls a tool several times then its refactored somewhere else (maybe even another file)
         step_run = {}
         step_run['class'] = 'Operation'
-        step_run['id'] = step['tool_id']
+        step_run['id'] = step['tool_id'].replace('/', '_')  ## TODO: refactor sanitization of  / and : 
         step_run['doc'] = "Execute "+ step_name
         # add step inputs
         step_inputs={}
+        step_connection_inputs = {}  ## the inputs that are from step connections
         for step_in in step['in']:
             step_in_details={}
-            step_in_details['source']=step['in'][step_in]['source']
+            # step_in_details['source']=step['in'][step_in]['source']
+            if step['in'][step_in]['source'] not in wf_inputs.keys():
+                step_num,out_name = step['in'][step_in]['source'].split('/')
+                if step_num.isdigit():   # the source references a step index
+                    step_num = str(step_num)
+                else:
+                    step_num = step_num.replace(':', ' -')
+                full_source_name = full_source_names_dict[step_num]
+                step_connection_inputs[step_in] = full_source_name + '/' + out_name
+            else:
+                full_source_name = step['in'][step_in]['source']
+                step_connection_inputs[step_in] = full_source_name
+
             step_in_details['type']='File'   ## Operation inputs and outputs MUST have a type
             step_in_details['format']='Any' #Need to complete from tool info'   ## Operation inputs and outputs SHOULD have a format and doc
             # step_in_details['doc']='Need to complete from tool info'   ## Operation inputs and outputs SHOULD have a format and doc
             step_inputs[step_in]=step_in_details
         step_run['inputs'] = step_inputs
+        step_details['in'] = step_connection_inputs
 
         # step outputs
         step_outputs_list=[]
@@ -83,6 +115,7 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
                 #step_out_details['outputSource']=         Not sure this makes sense to include
                 step_outputs[step_out]=step_out_details
                 step_outputs_list.append(step_out)
+                step_public_out_list.append(step_out)
         if corrected_step_index in global_outputs.keys():
             for global_out in global_outputs[corrected_step_index]:
                 step_out_details = {}
@@ -93,16 +126,33 @@ if wf_class == "GalaxyWorkflow" or "yaml_content" in wf_dict: # min check for fo
                 step_outputs[global_out]=step_out_details
                 step_outputs_list.append(global_out)
                 #print(global_out)
+                step_public_out_list.append(global_out)
+        if step_name in global_outputs.keys():
+            for global_out in global_outputs[step_name]:
+                step_out_details = {}
+                step_out_details['type']='File' ## Operation inputs and outputs MUST have a type
+                #step_out_details['doc']='Need to complete from tool info'  ## Operation inputs and outputs SHOULD have a format and doc
+                #step_out_details['format']='Need to complete from tool info' ## Operation inputs and outputs SHOULD have a format and doc
+                #step_out_details['outputSource']=         Not sure this makes sense to include
+                step_outputs[global_out]=step_out_details
+                step_outputs_list.append(global_out)
+                #print(global_out)
+                step_public_out_list.append(global_out)
         step_run['outputs']=step_outputs
         ## add the step to the list
         step_details['run'] = step_run
+        step_details['out'] = step_public_out_list
         steps[step_name]=step_details
     for output in wf_dict['outputs']:
         if wf_dict['outputs'][output]['outputSource'] not in wf_inputs.keys():
             output_details={}
             output_details['type']='File'
             step_num,out_name= wf_dict['outputs'][output]['outputSource'].split('/')
-            full_source_name = full_source_names_dict[str(step_num)]
+            if step_num.isdigit():   # the source references a step index
+                step_num = str(step_num)
+            else:
+                step_num = step_num.replace(':', ' -')
+            full_source_name = full_source_names_dict[step_num]
             output_details['outputSource']=full_source_name + '/' + out_name
             wf_outputs[output]=output_details
 
@@ -113,7 +163,7 @@ else:
 
 
 cwl_out['steps']=steps
-cwl_out['cwlVersion']='v1.2.0-dev2'
+cwl_out['cwlVersion']='v1.2.0-dev1'
 cwl_out['class']='Workflow'
 cwl_out['doc']=cwl_doc
 cwl_out['inputs']=wf_inputs
