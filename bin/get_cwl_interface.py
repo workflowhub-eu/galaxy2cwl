@@ -21,6 +21,7 @@ def is_yaml(s):
 def sanitize_source(input_text):
     sanitized_text = input_text.replace('/', '_')
     sanitized_text = sanitized_text.replace(':', '')
+    sanitized_text = sanitized_text.replace('.', '_')
     return sanitized_text
 
 def process_format1_json(wf_dict):
@@ -41,7 +42,7 @@ def process_format1_json(wf_dict):
             input_details['type'] = 'File'
             # ok to assume there is only 1 input per data_input step ?
             if len(step_details['inputs']) > 0:
-                input_name = step_details['inputs'][0]['name']
+                input_name = sanitize_source(step_details['inputs'][0]['name'])
                 if step_details['inputs'][0]['description'] != '':
                     input_details['doc']= step_details['inputs'][0]['description']
             else:

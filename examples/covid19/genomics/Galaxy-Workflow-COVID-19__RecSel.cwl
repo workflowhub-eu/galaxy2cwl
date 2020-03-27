@@ -1,20 +1,21 @@
 class: Workflow
 cwlVersion: v1.2.0-dev1
-doc: 'Abstract CWL generated from Galaxy: COVID-19: RecSel'
+doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
+  RecSel'
 inputs:
-  S_nt.fna:
+  S_nt_fna:
     format: data
     type: File
 outputs: {}
 steps:
   1_transeq:
     in:
-      input1: S_nt.fna
+      input1: S_nt_fna
     out:
     - out_file1
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_emboss_5_EMBOSS_transeq101_5.0.0
+      id: toolshed_g2_bx_psu_edu_repos_devteam_emboss_5_EMBOSS_transeq101_5_0_0
       inputs:
         input1:
           format: Any
@@ -30,7 +31,7 @@ steps:
     - outputAlignment
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_rnateam_mafft_rbc_mafft_7.221.3
+      id: toolshed_g2_bx_psu_edu_repos_rnateam_mafft_rbc_mafft_7_221_3
       inputs:
         inputSequences:
           format: Any
@@ -41,13 +42,13 @@ steps:
           type: File
   3_tranalign:
     in:
-      input1: S_nt.fna
+      input1: S_nt_fna
       input2: 2_MAFFT/outputAlignment
     out:
     - out_file1
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_emboss_5_EMBOSS_tranalign100_5.0.0
+      id: toolshed_g2_bx_psu_edu_repos_devteam_emboss_5_EMBOSS_tranalign100_5_0_0
       inputs:
         input1:
           format: Any
@@ -66,7 +67,7 @@ steps:
     - output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_fasttree_fasttree_2.1.10+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_fasttree_fasttree_2_1_10+galaxy1
       inputs:
         input_selector|input:
           format: Any
@@ -84,7 +85,7 @@ steps:
     - translated
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_hyphy_gard_hyphy_gard_2.5.4+galaxy0
+      id: toolshed_g2_bx_psu_edu_repos_iuc_hyphy_gard_hyphy_gard_2_5_4+galaxy0
       inputs:
         input_file:
           format: Any
@@ -107,7 +108,7 @@ steps:
     - absrel_output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_hyphy_absrel_hyphy_absrel_2.5.4+galaxy0
+      id: toolshed_g2_bx_psu_edu_repos_iuc_hyphy_absrel_hyphy_absrel_2_5_4+galaxy0
       inputs:
         input_file:
           format: Any
