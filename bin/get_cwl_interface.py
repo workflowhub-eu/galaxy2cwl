@@ -18,52 +18,61 @@ def is_json(s):
 def is_yaml(s):
     return try_as(yaml.safe_load, s, yaml.scanner.ScannerError)
 
-
+def sanitize_source(input_text):
+    sanitized_text = input_text.replace('/', '_')
+    sanitized_text = sanitized_text.replace(':', '')
+    return sanitized_text
 
 def process_format1_json(wf_dict):
     wf_inputs={}
     wf_outputs={}
     steps={}
     wf_name = wf_dict['name']
-    cwl_doc= 'Abstract CWL generated from Galaxy: ' + wf_name
+    cwl_doc= 'Abstract CWL Automatically generated from the Galaxy workflow file: ' + wf_name
     cwl_out={}
     map_output_to_in_name= {}  # map formal names to labelled/renamed
     step_index_map = {}  # map step index num with full step names 
     #iterate over input steps
     for step_index, step_details in wf_dict['steps'].items():
-        if step_details['type'] == 'data_input':
+        if step_details['type'] == 'data_input' or step_details['type'] == 'data_collection_input':
             #user data input
             input_details = {}
             input_details['format'] = 'data'
             input_details['type'] = 'File'
             # ok to assume there is only 1 input per data_input step ?
-            input_name = step_details['inputs'][0]['name']
-            if step_details['inputs'][0]['description'] != '':
-                input_details['doc']= step_details['inputs'][0]['description']
+            if len(step_details['inputs']) > 0:
+                input_name = step_details['inputs'][0]['name']
+                if step_details['inputs'][0]['description'] != '':
+                    input_details['doc']= step_details['inputs'][0]['description']
+            else:
+                if step_details['type'] == 'data_input':
+                    input_name = step_index + '_' + 'Input Dataset'
+                if step_details['type'] == 'data_collection_input':
+                    input_name = step_index + '_' + 'Input Dataset Collection'
             # why some input_data steps don't have workflow_outputs lists defined ?
             if len(step_details['workflow_outputs']) > 0:
-                output_name = step_details['workflow_outputs'][0]['output_name']
+                output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
             else:
                 output_name = 'output'
             map_output_to_in_name[step_index + '_' + output_name] = input_name
             wf_inputs[input_name] = input_details
         else:
-            step_name = step_details['name']
+            step_name = sanitize_source(step_details['name'])
             step_index_map[str(step_index)] = step_index + '_' + step_name
     # iterate over tool steps
     for step_index, step_details in wf_dict['steps'].items():
-        if step_details['type'] != 'data_input':
+        if step_details['type'] != 'data_input' and step_details['type'] != 'data_collection_input':
             step_cwl_entry = {}
             step_run_dict = {}
             step_run_dict['class'] = 'Operation'
-            step_run_dict['id'] = step_details['tool_id']
+            step_run_dict['id'] = sanitize_source(step_details['tool_id']).replace(' ', '_')
             step_class_outputs = {}   #dict inside the run object
             step_class_inputs = {} # dict inside the run  object
             step_wf_out = []  # list associated to out key
             step_wf_in = {}
-            step_name = step_index + '_' + step_details['name']
+            step_name = step_index + '_' + sanitize_source(step_details['name'])
             for input_name,input_details in step_details['input_connections'].items():
-                source_output_name = input_details['output_name']
+                source_output_name = sanitize_source(input_details['output_name'])
                 source_output_name_canon = str(input_details['id']) + '_' + source_output_name
                 source_index = input_details['id']
                 # get the source step id
