@@ -1,7 +1,7 @@
 class: Workflow
-cwlVersion: v1.2.0-dev1
-doc: 'Abstract CWL generated from Galaxy workflow file: COVID-19: read pre-processing
-  from SRA data'
+cwlVersion: v1.2.0-dev2
+doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
+  read pre-processing from SRA data'
 inputs:
   Illumina dataset collection:
     format: data
@@ -18,7 +18,7 @@ steps:
     - output1
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_samtool_filter2_samtool_filter2_1.8+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_devteam_samtool_filter2_samtool_filter2_1_8+galaxy1
       inputs:
         input1:
           format: Any
@@ -34,7 +34,7 @@ steps:
     - outFile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_picard_picard_MergeSamFiles_2.18.2.1
+      id: toolshed_g2_bx_psu_edu_repos_devteam_picard_picard_MergeSamFiles_2_18_2_1
       inputs:
         inputFile:
           format: Any
@@ -50,7 +50,7 @@ steps:
     - outFile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_picard_picard_MergeSamFiles_2.18.2.1
+      id: toolshed_g2_bx_psu_edu_repos_devteam_picard_picard_MergeSamFiles_2_18_2_1
       inputs:
         inputFile:
           format: Any
@@ -66,7 +66,7 @@ steps:
     - nonspecific
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_samtools_fastx_samtools_fastx_1.9+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_samtools_fastx_samtools_fastx_1_9+galaxy1
       inputs:
         input:
           format: Any
@@ -83,7 +83,7 @@ steps:
     - reverse
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_samtools_fastx_samtools_fastx_1.9+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_samtools_fastx_samtools_fastx_1_9+galaxy1
       inputs:
         input:
           format: Any
@@ -104,7 +104,7 @@ steps:
     - report_json
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_fastp_fastp_0.19.5+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_fastp_fastp_0_19_5+galaxy1
       inputs:
         single_paired|paired_input:
           format: Any
@@ -130,7 +130,7 @@ steps:
     - log_read_length
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_nanoplot_nanoplot_1.25.0+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_nanoplot_nanoplot_1_25_0+galaxy1
       inputs:
         mode|reads|files:
           format: Any
@@ -159,7 +159,7 @@ steps:
     - text_file
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_fastqc_fastqc_0.72+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_devteam_fastqc_fastqc_0_72+galaxy1
       inputs:
         input_file:
           format: Any
@@ -178,7 +178,7 @@ steps:
     - alignment_output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_minimap2_minimap2_2.17+galaxy0
+      id: toolshed_g2_bx_psu_edu_repos_iuc_minimap2_minimap2_2_17+galaxy0
       inputs:
         fastq_input|fastq_input1:
           format: Any
@@ -195,7 +195,7 @@ steps:
     - html_report
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_multiqc_multiqc_1.7
+      id: toolshed_g2_bx_psu_edu_repos_iuc_multiqc_multiqc_1_7
       inputs:
         results_0|software_cond|input:
           format: Any
@@ -214,7 +214,7 @@ steps:
     - bam_output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_bwa_bwa_mem_0.7.17.1
+      id: toolshed_g2_bx_psu_edu_repos_devteam_bwa_bwa_mem_0_7_17_1
       inputs:
         fastq_input|fastq_input1:
           format: Any
@@ -231,7 +231,7 @@ steps:
     - html_report
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_multiqc_multiqc_1.7
+      id: toolshed_g2_bx_psu_edu_repos_iuc_multiqc_multiqc_1_7
       inputs:
         results_0|software_cond|output_0|input:
           format: Any
@@ -250,7 +250,7 @@ steps:
     - output1
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_samtool_filter2_samtool_filter2_1.8+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_devteam_samtool_filter2_samtool_filter2_1_8+galaxy1
       inputs:
         input1:
           format: Any

@@ -1,5 +1,5 @@
 class: Workflow
-cwlVersion: v1.2.0-dev1
+cwlVersion: v1.2.0-dev2
 doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
   Assembly'
 inputs:
@@ -24,7 +24,7 @@ steps:
     - assembly
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_unicycler_unicycler_0.4.8.0
+      id: toolshed_g2_bx_psu_edu_repos_iuc_unicycler_unicycler_0_4_8_0
       inputs:
         long:
           format: Any
@@ -57,7 +57,7 @@ steps:
     - scaffold_graph
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_nml_spades_spades_3.12.0+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_nml_spades_spades_3_12_0+galaxy1
       inputs:
         libraries_0|files_0|file_type|fwd_reads:
           format: Any
@@ -97,7 +97,7 @@ steps:
     - outfile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_bandage_bandage_info_0.8.1+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_bandage_bandage_info_0_8_1+galaxy1
       inputs:
         input_file:
           format: Any
@@ -113,7 +113,7 @@ steps:
     - outfile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_bandage_bandage_image_0.8.1+galaxy2
+      id: toolshed_g2_bx_psu_edu_repos_iuc_bandage_bandage_image_0_8_1+galaxy2
       inputs:
         input_file:
           format: Any
@@ -129,7 +129,7 @@ steps:
     - outfile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_bandage_bandage_image_0.8.1+galaxy2
+      id: toolshed_g2_bx_psu_edu_repos_iuc_bandage_bandage_image_0_8_1+galaxy2
       inputs:
         input_file:
           format: Any
@@ -145,7 +145,7 @@ steps:
     - outfile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_bandage_bandage_info_0.8.1+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_bandage_bandage_info_0_8_1+galaxy1
       inputs:
         input_file:
           format: Any

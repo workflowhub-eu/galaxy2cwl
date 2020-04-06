@@ -1,6 +1,7 @@
 class: Workflow
-cwlVersion: v1.2.0-dev1
-doc: 'Abstract CWL generated from Galaxy workflow file: COVID-19: S-gene AA'
+cwlVersion: v1.2.0-dev2
+doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
+  S-gene AA'
 inputs:
   0_Input Dataset:
     format: data
@@ -14,7 +15,7 @@ steps:
     - out_file1
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_emboss_5_EMBOSS_transeq101_5.0.0
+      id: toolshed_g2_bx_psu_edu_repos_devteam_emboss_5_EMBOSS_transeq101_5_0_0
       inputs:
         input1:
           format: Any
@@ -30,7 +31,7 @@ steps:
     - outputAlignment
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_rnateam_mafft_rbc_mafft_7.221.3
+      id: toolshed_g2_bx_psu_edu_repos_rnateam_mafft_rbc_mafft_7_221_3
       inputs:
         inputSequences:
           format: Any
@@ -47,7 +48,7 @@ steps:
     - out_file1
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_emboss_5_EMBOSS_tranalign100_5.0.0
+      id: toolshed_g2_bx_psu_edu_repos_devteam_emboss_5_EMBOSS_tranalign100_5_0_0
       inputs:
         input1:
           format: Any

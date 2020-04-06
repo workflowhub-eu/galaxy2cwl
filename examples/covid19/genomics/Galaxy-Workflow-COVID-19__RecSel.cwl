@@ -1,5 +1,5 @@
 class: Workflow
-cwlVersion: v1.2.0-dev1
+cwlVersion: v1.2.0-dev2
 doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
   RecSel'
 inputs:

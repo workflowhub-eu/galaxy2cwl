@@ -1,6 +1,7 @@
 class: Workflow
-cwlVersion: v1.2.0-dev1
-doc: 'Abstract CWL generated from Galaxy workflow file: COVID-19: MCRA'
+cwlVersion: v1.2.0-dev2
+doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
+  MCRA'
 inputs:
   CoV acc date:
     format: data
@@ -63,7 +64,7 @@ steps:
     - error_log
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_ncbi_acc_download_ncbi_acc_download_0.2.5+galaxy0
+      id: toolshed_g2_bx_psu_edu_repos_iuc_ncbi_acc_download_ncbi_acc_download_0_2_5+galaxy0
       inputs:
         query_source|accession_file:
           format: Any
@@ -82,7 +83,7 @@ steps:
     - outFile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_devteam_picard_picard_NormalizeFasta_2.18.2.1
+      id: toolshed_g2_bx_psu_edu_repos_devteam_picard_picard_NormalizeFasta_2_18_2_1
       inputs:
         inputFile:
           format: Any
@@ -98,7 +99,7 @@ steps:
     - output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_bgruening_text_processing_tp_sed_tool_1.1.1
+      id: toolshed_g2_bx_psu_edu_repos_bgruening_text_processing_tp_sed_tool_1_1_1
       inputs:
         infile:
           format: Any
@@ -114,7 +115,7 @@ steps:
     - output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_nml_collapse_collections_collapse_dataset_4.1
+      id: toolshed_g2_bx_psu_edu_repos_nml_collapse_collections_collapse_dataset_4_1
       inputs:
         input_list:
           format: Any
@@ -130,7 +131,7 @@ steps:
     - outputAlignment
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_rnateam_mafft_rbc_mafft_7.221.3
+      id: toolshed_g2_bx_psu_edu_repos_rnateam_mafft_rbc_mafft_7_221_3
       inputs:
         inputSequences:
           format: Any
@@ -146,7 +147,7 @@ steps:
     - output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu_repos_iuc_fasttree_fasttree_2.1.10+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_fasttree_fasttree_2_1_10+galaxy1
       inputs:
         input_selector|input:
           format: Any

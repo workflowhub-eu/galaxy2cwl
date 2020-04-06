@@ -1,6 +1,7 @@
 class: Workflow
-cwlVersion: v1.2.0-dev1
-doc: 'Abstract CWL generated from Galaxy: COVID-19: SE Variation'
+cwlVersion: v1.2.0-dev2
+doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
+  SE Variation'
 inputs:
   0_Input Dataset Collection:
     format: data
@@ -18,7 +19,7 @@ steps:
     - variants
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/lofreq_call/lofreq_call/2.1.3.1+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_lofreq_call_lofreq_call_2_1_3_1+galaxy1
       inputs:
         reads:
           format: Any
@@ -39,7 +40,7 @@ steps:
     - statsFile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/snpeff/snpEff/4.3+T.galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_snpeff_snpEff_4_3+T_galaxy1
       inputs:
         input:
           format: Any
@@ -61,7 +62,7 @@ steps:
     - output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/snpsift/snpSift_extractFields/4.3+t.galaxy0
+      id: toolshed_g2_bx_psu_edu_repos_iuc_snpsift_snpSift_extractFields_4_3+t_galaxy0
       inputs:
         input:
           format: Any
@@ -77,7 +78,7 @@ steps:
     - output
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/nml/collapse_collections/collapse_dataset/4.1
+      id: toolshed_g2_bx_psu_edu_repos_nml_collapse_collections_collapse_dataset_4_1
       inputs:
         input_list:
           format: Any
@@ -95,7 +96,7 @@ steps:
     - report_json
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/fastp/fastp/0.19.5+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_fastp_fastp_0_19_5+galaxy1
       inputs:
         single_paired|in1:
           format: Any
@@ -118,7 +119,7 @@ steps:
     - output_fasta
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/snpeff/snpEff_build_gb/4.3+T.galaxy4
+      id: toolshed_g2_bx_psu_edu_repos_iuc_snpeff_snpEff_build_gb_4_3+T_galaxy4
       inputs:
         input_type|input_gbk:
           format: Any
@@ -139,7 +140,7 @@ steps:
     - html_report
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/multiqc/multiqc/1.7.1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_multiqc_multiqc_1_7_1
       inputs:
         results_0|software_cond|input:
           format: Any
@@ -163,7 +164,7 @@ steps:
     - mapping_stats
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/devteam/bowtie2/bowtie2/2.3.4.3+galaxy0
+      id: toolshed_g2_bx_psu_edu_repos_devteam_bowtie2_bowtie2_2_3_4_3+galaxy0
       inputs:
         library|input_1:
           format: Any
@@ -187,7 +188,7 @@ steps:
     - html_report
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/multiqc/multiqc/1.7.1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_multiqc_multiqc_1_7_1
       inputs:
         results_0|software_cond|input:
           format: Any
@@ -210,7 +211,7 @@ steps:
     - outFile
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/devteam/picard/picard_MarkDuplicates/2.18.2.2
+      id: toolshed_g2_bx_psu_edu_repos_devteam_picard_picard_MarkDuplicates_2_18_2_2
       inputs:
         inputFile:
           format: Any
@@ -231,7 +232,7 @@ steps:
     - html_report
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/multiqc/multiqc/1.7.1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_multiqc_multiqc_1_7_1
       inputs:
         results_0|software_cond|output_0|input:
           format: Any
@@ -254,7 +255,7 @@ steps:
     - realigned
     run:
       class: Operation
-      id: toolshed.g2.bx.psu.edu/repos/iuc/lofreq_viterbi/lofreq_viterbi/2.1.3.1+galaxy1
+      id: toolshed_g2_bx_psu_edu_repos_iuc_lofreq_viterbi_lofreq_viterbi_2_1_3_1+galaxy1
       inputs:
         reads:
           format: Any
