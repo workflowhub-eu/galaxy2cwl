@@ -99,7 +99,7 @@ def process_format1_json(wf_dict):
             step_cwl_entry['run'] = step_run_dict
             step_cwl_entry['out'] = step_wf_out
     cwl_out['steps']=steps
-    cwl_out['cwlVersion']='v1.2.0-dev1'
+    cwl_out['cwlVersion']='v1.2.0-dev2'
     cwl_out['class']='Workflow'
     cwl_out['doc']=cwl_doc
     cwl_out['inputs']=wf_inputs
