@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
+# SPDX-License-Identifier: BSD-3-Clause
+
 import yaml
 import sys
 # import pprint
 import json
-
 
 def try_as(loader, s, on_error):
     try:
@@ -253,23 +256,51 @@ def process_format2_yaml(wf_dict):
     cwl_out['outputs']=wf_outputs
     return cwl_out
 
-if __name__ == '__main__':
-    if is_json(open(sys.argv[1]).read()):
-        wf_dict = json.loads(open(sys.argv[1]).read())
+def main(argv=sys.argv):
+    if len(argv) < 2 or "-h" in argv or "--help" in argv:
+        print("Usage:", argv[0], "[GA]")
+        print("")
+        print("galaxy2cwl converts Galaxy workflow definitions to Common Workflow Language (CWL)")
+        print("The file GA must be in Galaxy 1 JSON format (.ga) or gxformat YAML format (.yaml)")
+        print("")
+        print("To process a Galaxy workflow from STDIN: galaxy2cwl -")
+        return 0
+ 
+    if argv[1] == "-":
+        wf = sys.stdin.read()
+    else:
+        try:
+            with open(argv[1], "rb") as f:
+                wf = f.read()
+        except IOError as ex:
+            print(ex, file=sys.stderr)
+            return 74 # EX_IOERR
+
+    if is_json(wf):
+        wf_dict = json.loads(wf)
         if "yaml_content" in wf_dict:
             # need to first extract 
             wf_dict = yaml.safe_load(wf_dict['yaml_content'])
             cwl_out = process_format2_yaml(wf_dict)
         else:
-            if wf_dict['a_galaxy_workflow'] == 'true':
+            if wf_dict.get('a_galaxy_workflow') == 'true':
                 cwl_out = process_format1_json(wf_dict)
-    else:
-        if is_yaml(open(sys.argv[1])):
-            wf_dict = yaml.safe_load(open(sys.argv[1]))
-            wf_class = wf_dict.get("class", None)
-            if wf_class == "GalaxyWorkflow":
-                cwl_out = process_format2_yaml(wf_dict)
             else:
-                print('Error processing file: Incorrect format')
-                sys.exit()
+                print('JSON file is not in recognized Galaxy format:', argv[1], file=sys.stderr)
+                return 65 ## EX_DATAERR
+    elif is_yaml(wf):
+        wf_dict = yaml.safe_load(wf)
+        wf_class = wf_dict.get("class", None)
+        if wf_class == "GalaxyWorkflow":
+            cwl_out = process_format2_yaml(wf_dict)
+        else:
+            print('YAML file is not in expected Galaxy format:', argv[1], file=sys.stderr)
+            return 65 ## EX_DATAERR
+    else:
+        print('Unknown format:', argv[1], file=sys.stderr)
+        return 66 ## EX_NOINPUT
     print(yaml.dump(cwl_out))
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
