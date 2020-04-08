@@ -37,7 +37,8 @@ vim setup.py ## update: version = "0.1.2",
 git commit -m "Release 0.1.2" setup.py
 git tag 0.1.2
 rm dist/*
-python setup.py bdist_wheel
+python3 setup.py clean
+python3 setup.py bdist_wheel
 twine upload --repository testpypi dist/*   ## for testing
 twine upload dist/*   ## for testing
 
@@ -66,6 +67,6 @@ All examples included in this project are readily available in dev.workflowhub.e
 
 ## Contribute
 
-Contributions welcome! Raise pull requests, issues etc on <https://github.com/workflowhub-eu/cwl-from-galaxy/>.
+Contributions welcome! Raise pull requests, issues etc on <https://github.com/workflowhub-eu/galaxy2cwl/>.
 
 Submitted patches are assumed to be licensed under the same BSD 3-Clause license.
