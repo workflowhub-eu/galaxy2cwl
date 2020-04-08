@@ -21,7 +21,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
   name = 'galaxy2cwl',
   packages = find_packages(exclude=['contrib', 'docs', 'tests']), # Required
-  version = "0.1.3",
+  version = "0.1.4",
   description = 'Convert a Galaxy workflow to abstract Common Workflow Language (CWL)',
   long_description=long_description,
   long_description_content_type="text/markdown",
