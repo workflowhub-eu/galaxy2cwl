@@ -21,14 +21,14 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
   name = 'galaxy2cwl',
   packages = find_packages(exclude=['contrib', 'docs', 'tests']), # Required
-  version = "0.1.0",
+  version = "0.1.3",
   description = 'Convert a Galaxy workflow to abstract Common Workflow Language (CWL)',
   long_description=long_description,
   long_description_content_type="text/markdown",
   author = 'Ignacio Eguinoa',
   include_package_data=True,
   license = "BSD 3-Clause",
-  url = 'https://github.com/workflowhub-eu/cwl-from-galaxy',
+  url = 'https://github.com/workflowhub-eu/galaxy2cwl',
   keywords = "cwl galaxy workflow",
   
   install_requires=[
@@ -39,7 +39,7 @@ setup(
   entry_points={
       'console_scripts': ["galaxy2cwl=galaxy2cwl.get_cwl_interface:main"]
   },
-  python_requires='>=3.6, <4',
+  python_requires='>=3.5, <4',
   classifiers=[
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
     'Development Status :: 2 - Pre-Alpha',
@@ -48,7 +48,10 @@ setup(
     'Topic :: Software Development :: Build Tools',
     'License :: OSI Approved :: BSD License',
     'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
     'Topic :: Scientific/Engineering :: Bio-Informatics',
     'Topic :: Utilities'
 ],
