@@ -1,13 +1,53 @@
 # Convert Galaxy workflow files to (abstract) CWL
 
-- This is a standalone tool that creates CWL-abstract descriptions of Galaxy workflow runs or Galaxy workflow files (static files). 
+This is a standalone tool that creates CWL-abstract descriptions of Galaxy workflow runs or Galaxy workflow files (static files). 
+
  - Usage:
  ```
  python3 bin/get_cwl_interface.py INPUT_GALAXY_WORKFLOW(.ga/.yaml) > OUTPUT_WORKFLOW.cwl
  ```
-
  - The tool works with inputs in both format1 (json format .ga, currently the standard for Galaxy workflow definitions) and format2. As described in the implementation (https://github.com/galaxyproject/gxformat2), gxformat2 is 'a highly experimental format and will change rapidly in potentially backward incompatible ways until the code is merged into the Galaxy server and enabled by default' therefore the conversion to CWL from this format is also variable and can rapidly change and/or break.
  - Initially the output of this project a CWL-abstract definition (aka cwl-interface, see https://github.com/common-workflow-language/common-workflow-language/issues/337 and https://github.com/common-workflow-language/cwl-v1.2/pull/3). As the CWL support in Galaxy increases then conversion could come up with a full CWL workflow file.
+
+## License
+
+* Copyright © 2019-2020, Ignacio Eguinoa, VIB, Universiteit Gent, and workflowhub.eu contributors
+
+Distributed under a [BSD 3-Clause license](https://github.com/workflowhub-eu/cwl-from-galaxy/blob/master/LICENSE).
+
+## Installing from source
+
+Easiest is to use `pip`:
+
+    pip3 install .
+
+or, assuming all dependencies are installed:
+
+    python setup.py install
+
+This should install `cwl2galaxy` on your PATH. 
+
+Alternatively you can run `python3 galaxy2cwl/get_cwl_interface.py` directly.
+
+<!--  
+
+### Release procedure
+
+vim setup.py ## update: version = "0.1.2",
+git commit -m "Release 0.1.2" setup.py
+git tag 0.1.2
+rm dist/*
+python setup.py bdist_wheel
+twine upload --repository testpypi dist/*   ## for testing
+twine upload dist/*   ## for testing
+
+vim setup.py ## prepare for next:  version = "0.1.3-SNAPSHOT",
+git commit -m "Prepare for 0.1.3" setup.py
+git push --tags
+
+
+See also https://packaging.python.org/tutorials/packaging-projects/
+-->
 
 ## Examples
 A simple workflow to use as example can be found in https://usegalaxy.eu/u/igegu/w/simple-workflow 
@@ -24,3 +64,8 @@ More information about this can be found [here](https://github.com/workflowhub-e
 WorkflowHub is an under development linked project that aims at, among other things, serve as a repository for workflows standardizing the metadata description. As such it provides the posibility of registering workflows in a diverse set of formats and packaging them in a RO-Crate package. 
 All examples included in this project are readily available in dev.workflowhub.eu
 
+## Contribute
+
+Contributions welcome! Raise pull requests, issues etc on <https://github.com/workflowhub-eu/cwl-from-galaxy/>.
+
+Submitted patches are assumed to be licensed under the same BSD 3-Clause license.
