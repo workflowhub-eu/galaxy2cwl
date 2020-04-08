@@ -42,10 +42,10 @@ python3 setup.py bdist_wheel
 twine upload --repository testpypi dist/*   ## for testing
 twine upload dist/*   ## if above is OK
 
-vim setup.py ## prepare for next:  version = "0.1.3-SNAPSHOT",
+vim setup.py ## prepare for next:  version = "0.1.3-dev",
 git commit -m "Prepare for 0.1.3" setup.py
 git push --tags
-
+git push
 
 See also https://packaging.python.org/tutorials/packaging-projects/
 in ~/.pypirc have tokens for both pypi and testpypi:
