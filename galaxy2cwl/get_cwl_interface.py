@@ -61,9 +61,14 @@ def process_format1_json(wf_dict):
             wf_inputs[input_name] = input_details
         elif step_details['type'] == 'parameter_input':
             input_details = {}
-            input_details['format'] = 'parameter'
-            input_details['type'] = 'Parameter'
+            input_details['format'] = 'boolean'
+            state = json.loads(step_details['tool_state'])
+            input_details['type'] = state['parameter_type']
             input_name = step_index + '_' + 'Input Parameter'
+            if len(step_details['workflow_outputs']) > 0:
+                output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
+            else:
+                output_name = 'output'
             map_output_to_in_name[step_index + '_' + output_name] = input_name
             wf_inputs[input_name] = input_details
 
