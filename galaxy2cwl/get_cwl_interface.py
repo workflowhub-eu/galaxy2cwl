@@ -7,6 +7,12 @@ import sys
 # import pprint
 import json
 
+def json_loader_custom(json_in):
+    if sys.version_info[0] <= 3.5:
+        return json.loads(json_in.decode('utf-8'))
+    else:
+        return json.loads(json_in)
+
 def try_as(loader, s, on_error):
     try:
         loader(s)
@@ -15,7 +21,7 @@ def try_as(loader, s, on_error):
         return False
 
 def is_json(s):
-    return try_as(json.loads, s, ValueError)
+    return try_as(json_loader_custom, s, ValueError)
 
 def is_yaml(s):
     return try_as(yaml.safe_load, s, yaml.scanner.ScannerError)
@@ -265,7 +271,7 @@ def main(argv=sys.argv):
         print("")
         print("To process a Galaxy workflow from STDIN: galaxy2cwl -")
         return 0
- 
+
     if argv[1] == "-":
         wf = sys.stdin.read()
     else:
@@ -277,7 +283,7 @@ def main(argv=sys.argv):
             return 74 # EX_IOERR
 
     if is_json(wf):
-        wf_dict = json.loads(wf)
+        wf_dict = json_loader_custom(wf)
         if "yaml_content" in wf_dict:
             # need to first extract 
             wf_dict = yaml.safe_load(wf_dict['yaml_content'])
