@@ -53,10 +53,10 @@ def process_format1_json(wf_dict):
                 if step_details['type'] == 'data_collection_input':
                     input_name = step_index + '_' + 'Input Dataset Collection'
             # why some input_data steps don't have workflow_outputs lists defined ?
-            if len(step_details['workflow_outputs']) > 0:
-                output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
-            else:
-                output_name = 'output'
+            output_name = 'output'
+            if 'workflow_outputs' in step_details.keys():
+                if len(step_details['workflow_outputs']) > 0:
+                    output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
             map_output_to_in_name[step_index + '_' + output_name] = input_name
             wf_inputs[input_name] = input_details
         else:
