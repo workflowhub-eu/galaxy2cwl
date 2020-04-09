@@ -64,7 +64,7 @@ def process_format1_json(wf_dict):
             step_index_map[str(step_index)] = step_index + '_' + step_name
     # iterate over tool steps
     for step_index, step_details in wf_dict['steps'].items():
-        if step_details['type'] != 'data_input' and step_details['type'] != 'data_collection_input':
+        if step_details['type'] != 'data_input' and step_details['type'] != 'data_collection_input' and step_details['type'] != 'parameter_input':
             step_cwl_entry = {}
             step_run_dict = {}
             step_run_dict['class'] = 'Operation'
