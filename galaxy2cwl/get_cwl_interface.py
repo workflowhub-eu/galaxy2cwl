@@ -7,6 +7,12 @@ import sys
 # import pprint
 import json
 
+def json_loader_custom(json_in):
+    if sys.version_info[0] <= 3.5:
+        return json.loads(json_in.decode('utf-8'))
+    else:
+        return json.loads(json_in)
+
 def try_as(loader, s, on_error):
     try:
         loader(s)
@@ -15,7 +21,7 @@ def try_as(loader, s, on_error):
         return False
 
 def is_json(s):
-    return try_as(json.loads, s, ValueError)
+    return try_as(json_loader_custom, s, ValueError)
 
 def is_yaml(s):
     return try_as(yaml.safe_load, s, yaml.scanner.ScannerError)
@@ -53,10 +59,10 @@ def process_format1_json(wf_dict):
                 elif step_details['type'] == 'data_collection_input':
                     input_name = step_index + '_' + 'Input Dataset Collection'
             # why some input_data steps don't have workflow_outputs lists defined ?
-            if len(step_details['workflow_outputs']) > 0:
-                output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
-            else:
-                output_name = 'output'
+            output_name = 'output'
+            if 'workflow_outputs' in step_details.keys():
+                if len(step_details['workflow_outputs']) > 0:
+                    output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
             map_output_to_in_name[step_index + '_' + output_name] = input_name
             wf_inputs[input_name] = input_details
         elif step_details['type'] == 'parameter_input':
@@ -278,7 +284,7 @@ def main(argv=sys.argv):
         print("")
         print("To process a Galaxy workflow from STDIN: galaxy2cwl -")
         return 0
- 
+
     if argv[1] == "-":
         wf = sys.stdin.read()
     else:
@@ -290,7 +296,7 @@ def main(argv=sys.argv):
             return 74 # EX_IOERR
 
     if is_json(wf):
-        wf_dict = json.loads(wf)
+        wf_dict = json_loader_custom(wf)
         if "yaml_content" in wf_dict:
             # need to first extract 
             wf_dict = yaml.safe_load(wf_dict['yaml_content'])
