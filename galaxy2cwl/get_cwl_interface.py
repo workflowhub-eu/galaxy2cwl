@@ -56,7 +56,7 @@ def process_format1_json(wf_dict):
             else:
                 if step_details['type'] == 'data_input':
                     input_name = step_index + '_' + 'Input Dataset'
-                if step_details['type'] == 'data_collection_input':
+                elif step_details['type'] == 'data_collection_input':
                     input_name = step_index + '_' + 'Input Dataset Collection'
             # why some input_data steps don't have workflow_outputs lists defined ?
             output_name = 'output'
@@ -65,12 +65,25 @@ def process_format1_json(wf_dict):
                     output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
             map_output_to_in_name[step_index + '_' + output_name] = input_name
             wf_inputs[input_name] = input_details
+        elif step_details['type'] == 'parameter_input':
+            output_name = 'output'
+            input_details = {}
+            state = json.loads(step_details['tool_state'])
+            input_details['type'] = state['parameter_type'].title()
+            input_details['format'] = state['parameter_type']
+            input_name = step_index + '_' + 'Input Parameter'
+            if 'workflow_outputs' in step_details.keys():
+                if len(step_details['workflow_outputs']) > 0:
+                    output_name = sanitize_source(step_details['workflow_outputs'][0]['output_name'])
+            map_output_to_in_name[step_index + '_' + output_name] = input_name
+            wf_inputs[input_name] = input_details
+
         else:
             step_name = sanitize_source(step_details['name'])
             step_index_map[str(step_index)] = step_index + '_' + step_name
     # iterate over tool steps
     for step_index, step_details in wf_dict['steps'].items():
-        if step_details['type'] != 'data_input' and step_details['type'] != 'data_collection_input':
+        if step_details['type'] != 'data_input' and step_details['type'] != 'data_collection_input' and step_details['type'] != 'parameter_input':
             step_cwl_entry = {}
             step_run_dict = {}
             step_run_dict['class'] = 'Operation'
