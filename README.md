@@ -17,8 +17,12 @@ Distributed under a [BSD 3-Clause license](https://github.com/workflowhub-eu/cwl
 
 ## Installing from source
 
-Easiest is to use `pip`:
+This library is easiest to install using pip:
+    
+    pip install galaxy2cwl
 
+If you want to install manually from this code base, then try:
+    
     pip3 install .
 
 or, assuming all dependencies are installed:
