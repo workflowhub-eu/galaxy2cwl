@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/galaxy2cwl.svg)](https://pypi.org/project/galaxy2cwl/)
+
 # Convert Galaxy workflow files to (abstract) CWL
 
 This is a standalone tool that creates CWL-abstract descriptions of Galaxy workflow runs or Galaxy workflow files (static files). 
