@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: Workflow
 label: Abstract CWL workflow automatically generated from a Galaxy workflow v2 file 
 inputs:

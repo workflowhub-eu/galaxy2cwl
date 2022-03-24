@@ -1,5 +1,5 @@
 class: Workflow
-cwlVersion: v1.0
+cwlVersion: v1.2
 inputs:
   0/output:
     format: Input files have no info about format
