@@ -1,5 +1,5 @@
 class: Workflow
-cwlVersion: v1.2.0-dev2
+cwlVersion: v1.2
 doc: 'Abstract CWL Automatically generated from the Galaxy workflow file: COVID-19:
   read pre-processing from SRA data'
 inputs:
